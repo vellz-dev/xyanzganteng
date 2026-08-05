@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traxa Attack | Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #001f3f, #000);
+      overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
+      position: relative;
+    }
+
+    /* Partikel biru */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /* --- TEKS TRAXA ATTACK --- */
+    .glitch {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 22px;
+      color: #0ff;
+      text-shadow: 
+        2px 2px 0 #ff00ff,
+        -2px -2px 0 #00ffff,
+        2px -2px 0 #ff0000,
+        -2px 2px 0 #00ff00;
+      animation: glitch 1s infinite alternate;
+      margin-bottom: 40px;
+      z-index: 2;
+    }
+
+    @keyframes glitch {
+      0% { transform: translate(0, 0); color: #0ff; }
+      20% { transform: translate(2px, -2px); color: #ff00ff; }
+      40% { transform: translate(-2px, 2px); color: #00ffff; }
+      60% { transform: translate(2px, 2px); color: #ff0000; }
+      80% { transform: translate(-2px, -2px); color: #00ff00; }
+      100% { transform: translate(0, 0); color: #0ff; }
+    }
+
+    .login-container {
+      background: rgba(0, 0, 50, 0.3);
+      border: 2px solid #00aaff;
+      border-radius: 15px;
+      padding: 40px;
+      width: 300px;
+      text-align: center;
+      color: #00ccff;
+      box-shadow: 0 0 20px #00aaff;
+      backdrop-filter: blur(10px);
+      z-index: 2;
+    }
+    h2 {
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid #00aaff;
+      color: #00ccff;
+      border-radius: 8px;
+      outline: none;
+      text-align: center;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #00aaff;
+      color: white;
+      font-size: 1em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #00ccff;
+      box-shadow: 0 0 15px #00ccff;
+    }
+
+    /* Popup */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,30,0.6);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.3s;
+      z-index: 5;
+    }
+    .popup-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+    .popup {
+      background: rgba(0,0,50,0.8);
+      border: 2px solid #00ccff;
+      color: #00ccff;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 20px #00ccff;
+      animation: popupIn 0.4s ease;
+    }
+    @keyframes popupIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+
+  <div class="glitch">TRAXA ATTACK</div>
+
+  <div class="login-container">
+    <h2>LOGIN ACCESS</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup" id="popupBox"></div>
+  </div>
+
+  <script>
+    // --- Login Function ---
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      const popupOverlay = document.getElementById("popupOverlay");
+      const popupBox = document.getElementById("popupBox");
+
+      if (user === "Admin" && pass === "1234") {
+        popupBox.innerText = "✅ Akses Diterima\nSelamat Datang, Admin!";
+      } else {
+        popupBox.innerText = "❌ Username atau Password salah!";
+      }
+
+      popupOverlay.classList.add("active");
+
+      setTimeout(() => {
+        popupOverlay.classList.remove("active");
+      }, 3000);
+    }
+
+    // --- Partikel Biru ---
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let particlesArray;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3;
+        this.speedX = (Math.random() - 0.5) * 1.5;
+        this.speedY = (Math.random() - 0.5) * 1.5;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      draw() {
+        ctx.fillStyle = 'rgba(0, 200, 255, 0.8)';
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00ccff';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particlesArray = [];
+      for (let i = 0; i < 100; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+  </script>
+</body>
+</html>
